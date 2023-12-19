@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Dec 04 09:42:41 CST 2023
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1701654161958
+https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.apache.struts\:struts-taglib\:jar\:1.3.8 from/to central (https\://repo.maven.apache.org/maven2)\: Premature end of Content-Length delimited message body (expected\: 251,521; received\: 229,376)

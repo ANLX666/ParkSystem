@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="header">
+<div class="top" id="item4">
+	<div class="container clearfix">
+		<ul class="clearfix fr">
+			<li th:if="${session.LogUser == null}"><a href="/join" >登录</a></li>
+			<li ><a href="/join#toregister" class="to_register">注册</a></li>
+			<li th:if="${session.LogUser != null}">
+			<a id="userN" th:text="${session.LogUser.name}"></a></li>
+			<li th:if="${session.LogUser != null}">
+			<a th:href="@{/user/logout}">退出登录</a>
+			</li>
+			<li th:if="${session.LogUser != null}"><a th:href="@{'/user/user-show?id='+${session.LogUser.id}}" style="border: none">个人中心</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="header">
+	<div class="container clearfix">
+		<div class="logo fl">
+			<a href="/index"><img src="/moban/images/logoo.png" alt=""/></a>
+		</div>
+		<div class="mm fr clearfix">
+			<a href="/car/car-select">查车位</a>
+		</div>
+
+		<div class="mm fr clearfix">
+			<a  th:if="${session.userVipStaut==0}" href="javascript:" id="bt" onclick="becomeVip(this)">申请会员</a>
+		</div>
+	</div>
+</div>
+	<body>
+	<!-- 引入公共js -->
+	<span th:include="/common/on-load-js :: commonOnLoadJs"></span>
+	<script type="text/javascript">
+		function becomeVip(obj)
+		{
+			// 禁用点击事件
+			$("#but").attr("disabled",true);
+			$.ajax({
+				type: 'POST',
+				url: '/user/become-vip',
+				data:{},
+				dataType: 'json',
+				success: function(data){
+					if(data=="1"){
+						location.href="/user/vipSuccess";
+					}
+					else if(data=="2")
+					{
+						layer.msg('服务器出现异常请稍后再试!',{icon:2,time:1000});
+					}
+					else
+					{
+						layer.msg('请您登录系统后再进行申请会员哦!',{icon: 2,time:4000});
+					}
+				}
+			});
+		}
+
+
+	</script>
+
+	</body>
+</div>
+
+</html>

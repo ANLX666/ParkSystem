@@ -1,0 +1,9 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Dec 04 09:36:19 CST 2023
+http\://repo.spring.io/milestone/.error=Could not transfer artifact org.jboss.shrinkwrap\:shrinkwrap-bom\:pom\:1.2.3 from/to spring-milestones (http\://repo.spring.io/milestone)\: status code\: 405, reason phrase\: Not Allowed (405)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1701653779789
+http\://repo.spring.io/ext-release-local/.error=Could not transfer artifact org.jboss.shrinkwrap\:shrinkwrap-bom\:pom\:1.2.3 from/to spring-ext (http\://repo.spring.io/ext-release-local/)\: status code\: 405, reason phrase\: Not Allowed (405)
+@default-spring-ext-http\://repo.spring.io/ext-release-local/.lastUpdated=1701653777585
+@default-spring-snapshots-http\://repo.spring.io/snapshot/.lastUpdated=1701653778832
+http\://repo.spring.io/snapshot/.error=Could not transfer artifact org.jboss.shrinkwrap\:shrinkwrap-bom\:pom\:1.2.3 from/to spring-snapshots (http\://repo.spring.io/snapshot)\: status code\: 405, reason phrase\: Not Allowed (405)
+@default-spring-milestones-http\://repo.spring.io/milestone/.lastUpdated=1701653778156

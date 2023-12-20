@@ -5,7 +5,7 @@
 	<div class="container clearfix">
 		<ul class="clearfix fr">
 			<li th:if="${session.LogUser == null}"><a href="/join" >登录</a></li>
-			<li ><a href="/join#toregister" class="to_register">注册</a></li>
+			<li th:if="${session.LogUser == null}"><a href="/join#toregister" class="to_register">注册</a></li>
 			<li th:if="${session.LogUser != null}">
 			<a id="userN" th:text="${session.LogUser.name}"></a></li>
 			<li th:if="${session.LogUser != null}">

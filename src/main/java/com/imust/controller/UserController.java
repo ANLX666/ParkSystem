@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequestMapping("/user")
 @Controller
@@ -57,7 +58,11 @@ public class UserController {
         boolean b = userService.addUser(users);
         System.out.println(users.getPassword());
         if (b == true){
-            return "register-ok";
+            List<Users> byName = userService.getByName(name);
+            if (byName == null){
+                return "register-ok";
+            }
+            return  "register-chongfu";
         }
         return  "register-fail";
     }

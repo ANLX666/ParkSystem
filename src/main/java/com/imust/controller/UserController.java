@@ -94,15 +94,18 @@ public class UserController {
         return "password";
     }
     @RequestMapping("updatePwd")
-    public String updatePwd(int id , String oldpassword , String newpassword) {
+    public String updatePwd(int id , String oldpassword , String newpassword, Model model) {
         Users user = userService.getUserById(id);
-        user.setPassword(newpassword);
-        boolean b = userService.updateUserPwd(user);
-        if (oldpassword == user.getPassword()) {
+        if (oldpassword.equals(user.getPassword())) {
+            user.setPassword(newpassword);
+            boolean b = userService.updateUserPwd(user);
             if (b) {
+                model.addAttribute("usermsg" , "修改密码成功");
                 System.out.println("修改密码成功");
-                return "password";
+                return "redirect:/user/logout";
             }
+        }else {
+            model.addAttribute("usermsg" , "old密码错误");
             System.out.println("密码错误");
         }
         return "password";

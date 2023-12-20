@@ -55,16 +55,18 @@ public class UserController {
         users.setPassword(password);
         users.setPhone(phone);
         users.setPlate_num(plate_num);
-        boolean b = userService.addUser(users);
         System.out.println(users.getPassword());
-        if (b == true){
-            List<Users> byName = userService.getByName(name);
-            if (byName == null){
+        List<Users> byName = userService.getByName(name);
+        System.out.println(byName);
+        if (byName.size() == 0) {
+            System.out.println("2121");
+            boolean b = userService.addUser(users);
+            if (b == true){
                 return "register-ok";
             }
-            return  "register-chongfu";
+            return  "register-fail";
         }
-        return  "register-fail";
+        return  "register-chongfu";
     }
 
 }

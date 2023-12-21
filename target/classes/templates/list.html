@@ -28,7 +28,8 @@
 							<select name="diquId" onchange="selectdiquPark()" class="form-control">
 								<option   value="" >请选择停车地区</option>
 								<option   value="0" >全部</option>
-								<option   th:each="diqu:${diquList}" th:value="${diqu.id}" th:text="${diqu.diquName}"></option>
+								<option   th:each="diqu:${diquList}" th:value="${diqu.id}" th:text="${diqu.diquName}"
+										  th:selected="${diqu.id} eq ${dqid}"></option>
 							</select>
 						</form>
 					</dd>

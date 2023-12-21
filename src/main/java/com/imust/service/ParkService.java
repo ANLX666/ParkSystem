@@ -79,7 +79,6 @@ public class ParkService {
 	}
 
     public List<DiQu> getDiQuList() {
-
 		return parkMapper.getDiQuList();
     }
 }

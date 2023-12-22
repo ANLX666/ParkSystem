@@ -55,7 +55,7 @@
 				      </td>
 				      <td>
 				      	<a th:if="${order.status==0}"  th:href="@{'/order/jiesuan?id='+${order.id}}">结算</a>
-				      	<a th:if="${order.status==1}"  th:href="@{'/order/jiesuan?id='+${order.id}}">删除</a>
+				      	<a th:if="${order.status==1}"  th:href="@{'/order/delete?id='+${order.id}}">删除</a>
 				      </td>
 			        </tr>
 				</tbody>

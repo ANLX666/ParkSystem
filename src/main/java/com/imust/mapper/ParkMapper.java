@@ -22,7 +22,7 @@ public interface ParkMapper {
 	@Select("select * from Park where  diquId = #{diquId}")
 	List<Park> findAllParkByKey(@Param("diquId") String status);
 	
-	@Select("select * from Park where  name like #{key}")
+	@Select("select * from Park join diqu on Park.diquId=diqu.id where name like #{key}")
 	List<Park> findParkByKey(@Param("key") String key);
 	
 	@Select("select * from Park where id=#{id}")
@@ -33,7 +33,7 @@ public interface ParkMapper {
     public void insertCar(Park car);
 	
 	//删除信息
-	@Delete("delete from Car where id=#{id}")
+	@Delete("delete from Park where id=#{id}")
 	public void deleteCar(int id);
 	
 	@Update("update Park set status=#{status} where id=#{id}")

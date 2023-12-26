@@ -77,6 +77,9 @@ function message_del(obj){
 				if(data.res==0){
 					$(obj).parents("tr").remove();
 					layer.msg('已删除!',{icon:1,time:1000});
+					setTimeout(function() {
+						location.replace(location.href);
+					}, "1000");
 				}else{
 					layer.msg('操作失败!',{icon: 2,time:1000});
 				}

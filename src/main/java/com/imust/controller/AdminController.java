@@ -1,14 +1,10 @@
 package com.imust.controller;
 
-
-
-
-import com.imust.entity.Admin;
-import com.imust.entity.Message;
-import com.imust.entity.Park;
+import com.imust.entity.*;
 import com.imust.service.AdminService;
 import com.imust.service.MessageService;
 import com.imust.service.ParkService;
+import com.imust.service.UserService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +32,10 @@ public class AdminController {
 
     @Autowired
     private ParkService parkService;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/login")
     public String login(Admin admins, HttpSession session, Model model){
         Admin admin=adminService.login(admins);
@@ -45,8 +45,9 @@ public class AdminController {
         }
         else{
             model.addAttribute("msg","账号或密码错误");
+            return "/admin/login";
         }
-        return "/admin/login";
+
     }
 
     @RequestMapping("/logout")
@@ -61,7 +62,8 @@ public class AdminController {
     }
 
     @RequestMapping("/admin-save")
-    public ResponseEntity<Object> adminSave(String name, String password, String password2) {
+    @ResponseBody
+    public Map adminSave(String name, String password, String password2) {
         Admin admin = new Admin();
         admin.setName(name);
         if (password2.equals(password)) {
@@ -85,7 +87,7 @@ public class AdminController {
         } else {
             responseData.put("res", -1);
         }
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return responseData;
     }
 
     @RequestMapping("/admin-list")
@@ -125,8 +127,9 @@ public class AdminController {
     }
 
     @RequestMapping("/delAdmin")
+    @ResponseBody
     // 在服务器端修改为通过@RequestParam注解获取请求参数id
-    public ResponseEntity<Object> delAdmin(@RequestParam("adminId") int adminId,Model model){
+    public Map delAdmin(@RequestParam("adminId") int adminId,Model model){
         // Admin adminById = adminService.getAdminById(id);
         boolean isSuccess = adminService.delAdmin(adminId);
         // 封装返回数据格式
@@ -138,7 +141,7 @@ public class AdminController {
         }
         List<Admin> allAdmin = adminService.getAllAdmin();
         model.addAttribute("adminNum",allAdmin.size());
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return responseData;
     }
 
     @RequestMapping("/findAdminByName")
@@ -168,18 +171,19 @@ public class AdminController {
     }
 
     @RequestMapping("/delMessage")
-    public ResponseEntity<Object> delMessage(@RequestParam("messageId") int messageId,Model model){
+    @ResponseBody
+    public Map delMessage(@RequestParam("messageId") int messageId,Model model){
         boolean isSuccess = messageService.delMessage(messageId);
         // 封装返回数据格式
         Map<String, Object> responseData = new HashMap<>();
         if (isSuccess) {
             responseData.put("res", 0);
         } else {
-            responseData.put("res", -1);
+            responseData.put("res", 1);
         }
         List<Message> allMessage = messageService.getAll();
         model.addAttribute("messageNum",allMessage.size());
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return responseData;
     }
 
     @RequestMapping("/answer-add")
@@ -189,8 +193,8 @@ public class AdminController {
     }
 
     @RequestMapping("/answer-save")
-    public ResponseEntity<Object>  saveAnswer(@RequestParam("id") int id,String answer,HttpSession session,Model model){
-        System.out.println(1111);
+    @ResponseBody
+    public Map saveAnswer(@RequestParam("id") int id,String answer,HttpSession session,Model model){
         Message message = messageService.getByid(id);
         message.setAnswer(answer);
         Admin admin = (Admin) session.getAttribute("LogAdmin");
@@ -202,11 +206,25 @@ public class AdminController {
         if (isSuccess) {
             responseData.put("res", 0);
         } else {
-            responseData.put("res", -1);
+            responseData.put("res", 1);
         }
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
-        // System.out.println(answer);
-        // return "/message/message-list";
+        return responseData;
+    }
+
+    @RequestMapping("/user-list")
+    public String userList(Model model){
+        List<Users> allUser =userService.getAll();
+        model.addAttribute("userList",allUser);
+        model.addAttribute("userNum",allUser.size());
+        return "user/user-list";
+    }
+
+    @RequestMapping("/findUserByName")
+    public String findUserByName(@RequestParam("nameTmp") String name, Model model) {
+        List<Users> userName = userService.getPointByName(name);
+        model.addAttribute("userList", userName);
+        model.addAttribute("userNum",userName.size());
+        return "user/user-list";
     }
 
     @RequestMapping("/car-list")
@@ -226,35 +244,64 @@ public class AdminController {
     }
 
     @RequestMapping("/delCar")
-    public ResponseEntity<Object> delCar(@RequestParam("carId") int carId,Model model){
+    @ResponseBody
+    public Map delCar(@RequestParam("carId") int carId,Model model){
         boolean isSuccess = parkService.delCar(carId);
         // 封装返回数据格式
         Map<String, Object> responseData = new HashMap<>();
         if (isSuccess) {
             responseData.put("res", 0);
         } else {
-            responseData.put("res", -1);
+            responseData.put("res", 1);
         }
         List<Park> allCar = parkService.getAll();
         model.addAttribute("carNum",allCar.size());
-        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        return responseData;
     }
 
     @RequestMapping("/car-edit")
-    public String toEdit(){
+    public String toEdit(int carId, Model model) {
+        Park car = parkService.getById(carId);
+        List<DiQu> diQuList = parkService.getDiQuList();
+        model.addAttribute("diquList",diQuList);
+        model.addAttribute("car", car);
         return "car/car-edit";
     }
 
     @RequestMapping("/car-update")
-    public String carEdit(){
-
-        return null;
+    @ResponseBody
+    public Map carEdit(Park park){
+        boolean b = parkService.updateCar(park);
+        Map<String, Object> responseData = new HashMap<>();
+        if (b) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        return responseData;
     }
 
     @RequestMapping("/car-add")
-    public String toCarAdd(){
+    public String toCarAdd(Model model){
+        List<DiQu> diQuList = parkService.getDiQuList();
+        model.addAttribute("diquList",diQuList);
         return "car/car-add";
     }
+
+    @RequestMapping("/car-save")
+    @ResponseBody
+    public Map carAdd(Park park){
+        boolean b = parkService.addCar(park);
+        Map<String, Object> responseData = new HashMap<>();
+        if (b) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        return responseData;
+    }
+
+
 
 
 

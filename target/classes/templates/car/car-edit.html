@@ -41,7 +41,7 @@
 				<select name="diquId"  class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
 					<option   value="" >请选择停车地区</option>
 					<@thymesVar id="sessionScope" type="session">
-					<option class="dropdown-item"  th:each="diqu:${session.diquList}" th:value="${diqu.id}" th:text="${diqu.diquName}"  th:selected="${diqu.id} eq ${car.diquId}" ></option>
+					<option class="dropdown-item"  th:each="diqu:${diquList}" th:value="${diqu.id}" th:text="${diqu.diquName}"  th:selected="${diqu.id} eq ${car.diquId}" ></option>
 				</select>
 			</div>
 		</div>

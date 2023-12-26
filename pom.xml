@@ -51,7 +51,10 @@
           <optional>true</optional>
           <scope>true</scope>  <!-- 需要设置为true，否则不生效-->
       </dependency>
-
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+      </dependency>
   	 <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>

@@ -2,6 +2,7 @@ package com.imust.controller;
 
 import com.imust.entity.Users;
 import com.imust.service.UserService;
+import com.imust.utils.Result;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class UserController {
                 //可用id
                 session.setAttribute("LogUser",login);
                 System.out.println(login.getId());
+                int vipStaut = login.getVipStaut();
+                session.setAttribute("userVipStaut",vipStaut);
                 return "redirect:/index";
             }
             model.addAttribute("msg","该用户已经停权");
@@ -109,5 +112,15 @@ public class UserController {
             System.out.println("密码错误");
         }
         return "password";
+    }
+    @RequestMapping("become-vip")
+    public  Result becomeVip( HttpSession session) {
+        Users logUser = (Users)session.getAttribute("LogUser");
+        int id1 = logUser.getId();
+        boolean b = userService.addShenPiList(id1);
+//        Result result = Result(1);
+//        System.out.println(result);
+        System.out.println(Result.ok());
+        return Result.ok();
     }
 }

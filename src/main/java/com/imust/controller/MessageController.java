@@ -27,11 +27,6 @@ public class MessageController {
         return "myMessage";
     }
 
-//    @RequestMapping("message-save")
-//    public String messageSave(){
-//
-//        return "myMessage";
-//    }
     @RequestMapping("message-save")
     public String messageSave(String content , HttpSession httpSession){
         Message message = new Message();

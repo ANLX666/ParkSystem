@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -114,13 +115,22 @@ public class UserController {
         return "password";
     }
     @RequestMapping("become-vip")
-    public  Result becomeVip( HttpSession session) {
+    @ResponseBody
+    public  String becomeVip( HttpSession session) {
         Users logUser = (Users)session.getAttribute("LogUser");
         int id1 = logUser.getId();
-        boolean b = userService.addShenPiList(id1);
-//        Result result = Result(1);
-//        System.out.println(result);
-        System.out.println(Result.ok());
-        return Result.ok();
+        String code = "0";
+        if (logUser != null ) {
+            if (userService.addShenPiList(id1)){
+                return "1";
+            }
+        }else  {
+            return "2";
+        }
+        return  code;
+    }
+    @RequestMapping("vipSuccess")
+    public String vipSuccess(){
+        return "vipSuccess";
     }
 }

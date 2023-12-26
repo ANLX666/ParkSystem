@@ -69,4 +69,5 @@ public class AdminService {
 	public List<Admin> getAllAdmin(){
 		return adminMapper.findAll();
 	}
+
 }

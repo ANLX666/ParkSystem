@@ -10,10 +10,10 @@ import com.imust.mapper.MessageMapper;
 
 @Service
 public class MessageService {
-	
+
 	@Autowired
 	private MessageMapper messageMapper;
-	
+
 	//通过id修改状态
 	public boolean updateMessage(Message message) {
 		try {
@@ -24,7 +24,7 @@ public class MessageService {
 			return false;
 		}
 	}
-	
+
 	//模糊查询
 	public List<Message> getByContent(String tmpContent) {
 		String content = "%"+tmpContent+"%";
@@ -49,7 +49,7 @@ public class MessageService {
 			return false;
 		}
 	}
-	
+
 	//添加
 	public boolean addMessage(Message message) {
 		try {
@@ -58,6 +58,16 @@ public class MessageService {
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
+		}
+	}
+	//添加
+	public Message getByid(int id) {
+		try {
+			Message message = messageMapper.getByid(id);
+			return message;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
 		}
 	}
 }

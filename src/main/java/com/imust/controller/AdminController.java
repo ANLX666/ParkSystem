@@ -1,10 +1,7 @@
 package com.imust.controller;
 
 import com.imust.entity.*;
-import com.imust.service.AdminService;
-import com.imust.service.MessageService;
-import com.imust.service.ParkService;
-import com.imust.service.UserService;
+import com.imust.service.*;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +25,9 @@ public class AdminController {
     private AdminService adminService;
 
     @Autowired
+    private  NoticeService noticeService;
+
+    @Autowired
     private MessageService messageService;
 
     @Autowired
@@ -35,6 +35,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping("/login")
     public String login(Admin admins, HttpSession session, Model model){
@@ -301,8 +304,173 @@ public class AdminController {
         return responseData;
     }
 
+    @RequestMapping("/order-list")
+    public String orderList(Model model){
+        List<Order> orderList = orderService.getAll();
+        model.addAttribute("orderList",orderList);
+        model.addAttribute("orderNum",orderList.size());
+        return "order/order-list";
+    }
 
+    @RequestMapping("/delOrder")
+    @ResponseBody
+    public Map delOrder(@RequestParam("orderId") int orderId,Model model){
+        boolean isSuccess = orderService.delOrder(orderId);
+        Map<String, Object> responseData = new HashMap<>();
+        if (isSuccess) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        List<Order> allOrder = orderService.getAll();
+        model.addAttribute("orderNum",allOrder.size());
+        return responseData;
+    }
 
+    @RequestMapping("/findOrderByKey")
+    public String findOrderByKey(@RequestParam("keyTmp") String key,Model model){
+        List<Order> orderByKey = orderService.getByKey(key);
+        model.addAttribute("orderList",orderByKey);
+        model.addAttribute("orderNum",orderByKey.size());
+        return "order/order-list";
+    }
+
+//    @RequestMapping("/point-list")
+
+    @RequestMapping("/point-list")
+    public String pointList(Model model){
+        List<Users> allPoint = userService.getAllPoint();
+        model.addAttribute("pointList",allPoint);
+        model.addAttribute("pointNum",allPoint.size());
+        return "point/point-list";
+    }
+
+    @RequestMapping("findPointByName")
+    public String findPointByName(@RequestParam("nameTmp") String name,Model model){
+        List<Users> pointByName = userService.getPointByName(name);
+        model.addAttribute("pointList",pointByName);
+        model.addAttribute("pointNum",pointByName.size());
+        return "point/point-list";
+    }
+
+    @RequestMapping("/vipList")
+    public String vipList(Model model){
+        List<Users> users = userService.queryVipList();
+        model.addAttribute("vipList",users);
+        return "user/vip-list";
+    }
+
+    @RequestMapping("/sartVip")
+    @ResponseBody
+    public Map startVip(@RequestParam("userId") int userId,Users user,Model model){
+//        boolean isSuccess = userService.sartVip(userId,user.getStauts());
+        Map<String, Object> responseData = new HashMap<>();
+        if (userService.sartVip(userId,1)){
+            List<VipShenQing> vipShenQings = userService.queryVipListByUserId(userId);
+//            System.out.println(vipShenQings.size());
+            for (int i = 0; i<vipShenQings.size() ; i++) {
+                userService.deleteShenPiId(vipShenQings.get(i).getId());
+//                System.out.println(vipShenQings.get(i).getId());
+            }
+            responseData.put("res", 0);
+        }
+//        if (isSuccess) {
+//            responseData.put("res", 0);
+//        } else {
+//            responseData.put("res", 1);
+//        }
+        List<Users> users = userService.queryVipList();
+        model.addAttribute("vipList",users);
+        return responseData;
+    }
+
+    @RequestMapping("/stopVip")
+    @ResponseBody
+    public Map stopVip(@RequestParam("userId") int userId,Users user,Model model){
+        boolean isSuccess = userService.stopVip(userId,user.getStauts());
+        Map<String, Object> responseData = new HashMap<>();
+        if (isSuccess) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        List<Users> users = userService.queryVipList();
+        model.addAttribute("vipList",users);
+        return responseData;
+    }
+
+    @RequestMapping("/notice-list")
+    public String noticeList(Model model){
+        List<Notice> allList = noticeService.getAll();
+        model.addAttribute("noticeNum",allList.size());
+        model.addAttribute("noticeList",allList);
+        return "notice/notice-list";
+    }
+
+    @RequestMapping("/findNoticeByTitle")
+    public String findNoticeByTitle(@RequestParam("titleTmp") String title, Model model) {
+        List<Notice> titleList = noticeService.getByTitle(title);
+        model.addAttribute("noticeNum",titleList.size());
+        model.addAttribute("noticeList",titleList);
+        return "notice/notice-list";
+    }
+
+    @RequestMapping("/delNotice")
+    @ResponseBody
+    public Map delNotice(@RequestParam("noticeId") int noticeId,Model model){
+        boolean isSuccess = noticeService.delNotice(noticeId);
+        // 封装返回数据格式
+        Map<String, Object> responseData = new HashMap<>();
+        if (isSuccess) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        List<Notice> allList = noticeService.getAll();
+        model.addAttribute("noticeNum",allList.size());
+        return responseData;
+    }
+
+    @RequestMapping("/notice-edit")
+    public String toNoticeEdit(int noticeId, Model model) {
+        Notice byId = noticeService.getById(noticeId);
+        model.addAttribute("notice", byId);
+        return "notice/notice-edit";
+    }
+
+    @RequestMapping("/notice-update")
+    @ResponseBody
+    public Map noticeEdit(Notice notice){
+        boolean b = noticeService.updateNotice(notice);
+        Map<String, Object> responseData = new HashMap<>();
+        if (b) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        return responseData;
+    }
+
+    @RequestMapping("/notice-add")
+    public String toNoticeadd(){
+        return "notice/notice-add";
+    }
+
+    @RequestMapping("/notice-save")
+    @ResponseBody
+    public Map noticeAdd(Notice notice,HttpSession session){
+        Admin logAdmin = (Admin)session.getAttribute("LogAdmin");
+        notice.setAdmin_id(logAdmin.getId());
+        notice.setAdmin_name(logAdmin.getName());
+        boolean b = noticeService.addNotice(notice);
+        Map<String, Object> responseData = new HashMap<>();
+        if (b) {
+            responseData.put("res", 0);
+        } else {
+            responseData.put("res", 1);
+        }
+        return responseData;
+    }
 
 
 }

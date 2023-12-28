@@ -2,6 +2,7 @@ package com.imust.service;
 
 import java.util.List;
 
+import com.imust.entity.VipShenQing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -116,5 +117,13 @@ public class UserService {
 
 	public void deleteShenpiListById(int id) {
 		 userMapper.deleteShenpiListById(id);
+	}
+
+	public List<VipShenQing> queryVipListByUserId(int userId) {
+		return userMapper.queryVipListByUserId(userId);
+	}
+
+	public void deleteShenPiId(int id) {
+		userMapper.deleteShenPiId(id);
 	}
 }

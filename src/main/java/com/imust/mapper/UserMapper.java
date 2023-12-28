@@ -2,6 +2,7 @@ package com.imust.mapper;
 
 import java.util.List;
 
+import com.imust.entity.VipShenQing;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -69,4 +70,9 @@ public interface UserMapper {
 	//删除审批列表中的信息
 	@Delete("   delete  from vipShenPi where  vipId=#{uId} ")
 	void deleteShenpiListById(@Param("uId") int id);
+
+	@Select("select id from vipShenPi where vipId = #{userId}")
+    List<VipShenQing> queryVipListByUserId(@Param("userId") int userId);
+	@Delete("   delete  from vipShenPi where  id=#{id} ")
+	boolean deleteShenPiId(@Param("id") int id);
 }
